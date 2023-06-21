@@ -32,7 +32,7 @@ function App() {
 
       <MySelect
         value={selectedSort}
-        onChange={(sort) => selectedSort(sortPosts)}
+        onChange={sortPosts}
         defaultValue='Sort by'
         option={[
           { value: "title", name: "by name" },
