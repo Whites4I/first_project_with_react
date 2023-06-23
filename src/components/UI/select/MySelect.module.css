@@ -1,0 +1,7 @@
+.mySelect {
+  padding: 5px 11px;
+  color: gray;
+  background: transparent;
+  border: 1px solid teal;
+  cursor: pointer;
+}

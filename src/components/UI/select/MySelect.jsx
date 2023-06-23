@@ -1,8 +1,13 @@
 import React from "react";
+import cl from "./MySelect.module.css";
 
 const MySelect = ({ option, defaultValue, value, onChange }) => {
   return (
-    <select value={value} onChange={(e) => onChange(e.target.value)}>
+    <select
+      className={cl.mySelect}
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+    >
       <option disabled value=''>
         {defaultValue}
       </option>

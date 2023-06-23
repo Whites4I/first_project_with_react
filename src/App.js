@@ -1,31 +1,26 @@
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 import "./styles/App.css";
 import PostList from "./components/PostList";
 import PostForm from "./components/PostForm";
 import PostFilter from "./components/PostFilter";
 import MyModal from "./components/UI/MyModal/MyModal";
 import MyButton from "./components/UI/button/MyButton";
+import { usePosts } from "./hooks/usePosts";
+import axios from "axios";
 
 function App() {
   const [posts, setPosts] = useState([]);
   const [modal, setModal] = useState(false);
   const [filter, setFilter] = useState({ sort: "", query: "" });
+  const sortedAndSearchPosts = usePosts(posts, filter.sort, filter.query);
 
-  const sortedPosts = useMemo(() => {
-    if (filter.sort) {
-      return [...posts].sort((a, b) =>
-        a[filter.sort].localeCompare(b[filter.sort])
-      );
-    }
-    return posts;
-  }, [filter.sort, posts]);
-
-  const sortedAndSearchPosts = useMemo(() => {
-    return sortedPosts.filter((post) =>
-      post.title.toLocaleLowerCase().includes(filter.query)
+  async function fetchPosts() {
+    const response = await axios.get(
+      "https://jsonplaceholder.typicode.com/posts/"
     );
-  }, [filter.query, sortedPosts]);
-
+    setPosts(response.data);
+  }
+  fetchPosts();
   const createPost = (newPost) => {
     setPosts([...posts, newPost]);
     setModal(false);
