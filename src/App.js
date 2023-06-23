@@ -2,68 +2,58 @@ import React, { useMemo, useState } from "react";
 import "./styles/App.css";
 import PostList from "./components/PostList";
 import PostForm from "./components/PostForm";
-import MySelect from "./components/UI/select/MySelect";
-import MyInput from "./components/UI/input/MyInput";
+import PostFilter from "./components/PostFilter";
+import MyModal from "./components/UI/MyModal/MyModal";
+import MyButton from "./components/UI/button/MyButton";
 
 function App() {
-  const [posts, setPosts] = useState([
-    { id: 1, title: "a", body: "e" },
-    { id: 2, title: "v", body: "w" },
-    { id: 3, title: "s", body: "a" },
-  ]);
-
-  const [selectedSort, setSelectedSort] = useState("");
-  const [searchQuery, setSearchQuery] = useState("");
+  const [posts, setPosts] = useState([]);
+  const [modal, setModal] = useState(false);
+  const [filter, setFilter] = useState({ sort: "", query: "" });
 
   const sortedPosts = useMemo(() => {
-    if (selectedSort) {
+    if (filter.sort) {
       return [...posts].sort((a, b) =>
-        a[selectedSort].localeCompare(b[selectedSort])
+        a[filter.sort].localeCompare(b[filter.sort])
       );
     }
     return posts;
-  }, [selectedSort, posts]);
+  }, [filter.sort, posts]);
+
+  const sortedAndSearchPosts = useMemo(() => {
+    return sortedPosts.filter((post) =>
+      post.title.toLocaleLowerCase().includes(filter.query)
+    );
+  }, [filter.query, sortedPosts]);
 
   const createPost = (newPost) => {
     setPosts([...posts, newPost]);
+    setModal(false);
   };
 
   const removePost = (post) => {
     setPosts(posts.filter((i) => i.id !== post.id));
   };
 
-  const sortPosts = (sort) => {
-    setSelectedSort(sort);
-  };
-
   return (
     <div className='App'>
-      <PostForm create={createPost} />
-      <hr style={{ margin: "15px 0" }} />
-      <MyInput
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-        placeholder='Search...'
-      />
-      <MySelect
-        value={selectedSort}
-        onChange={sortPosts}
-        defaultValue='Sort by'
-        option={[
-          { value: "title", name: "by name" },
-          { value: "body", name: "by description" },
-        ]}
-      />
+      <MyButton style={{ marginTop: 20 }} onClick={() => setModal(true)}>
+        Create post
+      </MyButton>
 
-      {posts.length ? (
-        <PostList
-          remove={removePost}
-          posts={sortedPosts}
-          title='Posts for JS'
-        />
-      ) : (
-        <h1 style={{ textAlign: "center" }}>Posts not find</h1>
-      )}
+      <MyModal visible={modal} setVisible={setModal}>
+        <PostForm create={createPost} />
+      </MyModal>
+
+      <hr style={{ margin: "15px 0" }} />
+
+      <PostFilter filter={filter} setFilter={setFilter} />
+
+      <PostList
+        remove={removePost}
+        posts={sortedAndSearchPosts}
+        title='Posts for JS'
+      />
     </div>
   );
 }
