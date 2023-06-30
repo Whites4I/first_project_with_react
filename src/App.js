@@ -7,7 +7,6 @@ import MyModal from "./components/UI/MyModal/MyModal";
 import MyButton from "./components/UI/button/MyButton";
 import { usePosts } from "./hooks/usePosts";
 import axios from "axios";
-import MyModal2 from "./components/UI/MyModal2/MyModal2";
 
 function App() {
   const [posts, setPosts] = useState([]);
@@ -40,7 +39,6 @@ function App() {
 
       <MyModal visible={modal} setVisible={setModal}>
         <PostForm create={createPost} />
-        <MyModal2 />
       </MyModal>
 
       <hr style={{ margin: "15px 0" }} />
