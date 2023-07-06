@@ -11,6 +11,9 @@ function PostItem(props) {
         <div>{props.post.body}</div>
       </div>
       <div className='.post__btns'>
+        <MyButton style={{ marginLeft: 15 }} onClick={() => {}}>
+          Open
+        </MyButton>
         <MyButton
           style={{ marginLeft: 15 }}
           onClick={() => props.remove(props.post)}
